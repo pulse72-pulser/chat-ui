@@ -1,13 +1,49 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+import {createBrowserRouter ,RouterProvider} from 'react-router-dom';
+import HomePage from './pages/home.page';
+import ChatsPage from './pages/chats.page';
+import SignInPage from './pages/signin.page';
+import SignOutPage from './pages/signout.page';
+
+import { Auth } from './providers/auth.provider';
+
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <HomePage />,
+    errorElement: <div>404 Not Found</div>
+  },
+  {
+    path: '/chats',
+    element:<ChatsPage/>,
+    errorElement: <div>404 Not Found</div>
+  },
+  {
+    path: '/sign-in',
+    element: <SignInPage />,
+    errorElement: <div>404 Not Found</div>
+  },
+  {
+    path: '/sign-out',
+    element: <SignOutPage />,
+    errorElement: <div>404 Not Found</div>
+  
+  }
+]);
+
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Auth>
+    <RouterProvider router={router}/>
+    </Auth>
   </React.StrictMode>
 );
 
