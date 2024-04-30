@@ -1,17 +1,28 @@
 import React,{useState,useEffect} from 'react';
 import { Link } from 'react-router-dom';
-import { useAuthContext } from "@asgardeo/auth-react";
-import {useNavigate} from 'react-router-dom';
+// import { useAuthContext } from "@asgardeo/auth-react";
+
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import SideBar from '../../components/Sidebar';
+import MainContent from '../../components/MainContent';
+import NavBar from '../../components/Navbar';
 
 
-const MainLayout = ({ children ,secure =false }) => {
-    const [authenticateState, setAuthenticateState] = useState(null);
-    const { state, signOut, getBasicUserInfo, getIDToken, getDecodedIDToken } = useAuthContext();
-  
-    const navigate = useNavigate();
-    if(secure && !state?.isAuthenticated){
-       navigate("/sign-in");
-    }
+const MainLayout = ({ children }) => {
+    // const [authenticateState, setAuthenticateState] = useState(null);
+    // const { state, signOut, getBasicUserInfo, getIDToken, getDecodedIDToken } = useAuthContext();
+    const [mobileOpen, setMobileOpen] = React.useState(false);
+    // const navigate = useNavigate();
+
+    // if(secure && !state?.isAuthenticated){
+    //    navigate("/sign-in");
+    // }
+
+    const handleDrawerToggle = () => {
+        setMobileOpen(!mobileOpen);
+    };
+    
 
    
 //   useEffect(() => {
@@ -35,18 +46,28 @@ const MainLayout = ({ children ,secure =false }) => {
 //     }
 //   }, [state.isAuthenticated]);
 
-  console.log("auth state",authenticateState)
+//   console.log("auth state",authenticateState)
     
     return (
         <div>
-            <nav>
+            <NavBar
+                // onSignOut={signOut}
+            />
+            {/* <nav>
                 {!state?.isAuthenticated && <button >
                     <Link to="/sign-in">Login</Link>
                 </button>}
                 {state?.isAuthenticated &&<button >
                     <Link to="/sign-out">Logout</Link>
                 </button>}
-            </nav>
+            </nav> */}
+                <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <NavBar handleDrawerToggle={handleDrawerToggle} />
+      <SideBar mobileOpen={mobileOpen} handleDrawerClose={() => setMobileOpen(false)} />
+      <MainContent />
+    </Box>
+
             <div>{children}</div>
         </div>
     );
