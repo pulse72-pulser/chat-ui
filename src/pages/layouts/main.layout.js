@@ -9,7 +9,7 @@ import MainContent from '../../components/MainContent';
 import NavBar from '../../components/Navbar';
 
 
-const MainLayout = ({ children }) => {
+const MainLayout = ({ children ,chats}) => {
     // const [authenticateState, setAuthenticateState] = useState(null);
     // const { state, signOut, getBasicUserInfo, getIDToken, getDecodedIDToken } = useAuthContext();
     const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -64,7 +64,9 @@ const MainLayout = ({ children }) => {
                 <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <NavBar handleDrawerToggle={handleDrawerToggle} />
-      <SideBar mobileOpen={mobileOpen} handleDrawerClose={() => setMobileOpen(false)} />
+      <SideBar 
+        chats = {chats|| []}
+      mobileOpen={mobileOpen} handleDrawerClose={() => setMobileOpen(false)} />
       <MainContent />
     </Box>
 

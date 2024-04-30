@@ -15,9 +15,9 @@ function ChatList({ chats, onSelectChat, selectedChatId, unreadChats = [] }) {
   return (
     <List>
       {chatData.map((chat) => (
-        <ListItem key={chat.id} disablePadding>
-          <ListItemButton selected={chat.id === selectedChatId} onClick={() => onSelectChat(chat.id)}>
-            <ListItemText primary={chat.name} />
+        <ListItem key={chat.chat_id} disablePadding>
+          <ListItemButton selected={chat.chat_id === selectedChatId} onClick={() => onSelectChat(chat.chat_id)}>
+            <ListItemText primary={chat.chat_name} />
             {unreadChats.includes(chat.id) && (
               <Badge color="primary" variant="dot" overlap="circular" anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} />
             )}

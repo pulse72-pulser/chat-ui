@@ -2,17 +2,19 @@ import Chats from "../components/chats";
 import MainLayout from "./layouts/main.layout";
 import {useNavigate} from 'react-router-dom';
 import { useAuthContext } from "@asgardeo/auth-react";
-import { useEffect } from "react";
+import { useEffect ,useState} from "react";
 
 import { getChats } from '../services/chat.services';
 
 export default function ChatsPage() {
-  const { state, signOut, getBasicUserInfo, getIDToken, getDecodedIDToken } = useAuthContext();
+  const { state, signOut, getBasicUserInfo, getIDToken,getAccessToken, getDecodedIDToken } = useAuthContext();
   const navigate = useNavigate();
 
   if(!state?.isAuthenticated){
     navigate("/");
   }
+
+  const [chats, setChats] = useState([]);
 
     //   if (state?.isAuthenticated) {
   //     const getData = async () => {
@@ -35,9 +37,12 @@ export default function ChatsPage() {
       if(state?.isAuthenticated) {
         
         try{
-          const token = await getIDToken();
+          // const token = await getIDToken();
+          const token = await getAccessToken();
+          // console.log("access token", token)
           const chats = await getChats(token);
           console.log(chats);
+          setChats(chats?.chats);
         }catch(e){
           console.error(e);
         }
@@ -53,8 +58,11 @@ export default function ChatsPage() {
 
     return (
       <>
-        <MainLayout>
-        <Chats />
+        <MainLayout
+          chats={chats}
+        >
+        <Chats 
+        />
         </MainLayout>
       </>
     );
