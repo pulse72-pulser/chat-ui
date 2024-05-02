@@ -1,42 +1,38 @@
-// MainContent.js
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Toolbar, List, ListItem, ListItemText, TextField, Button, Divider } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import { getChatById } from '../services/chat.services';  // Adjust the path as necessary
 
 const drawerWidth = 240;
 
-function MainContent({ selectedChat }) {
-  const [messages, setMessages] = useState([]);
+function MainContent({ messages }) {
+//  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
 
   // useEffect hook to fetch messages when selectedChat changes
-  useEffect(() => {
-    if (selectedChat !== null) {
-      // Fetch messages for the selected chat from the backend
-      fetchMessages(selectedChat)
-        .then((messages) => {
-          setMessages(messages);
-        })
-        .catch((error) => {
-          console.error('Error fetching messages:', error);
-        });
-    }
-  }, [selectedChat]);
-
-  // Function to fetch messages from the backend
-  const fetchMessages = async (chatId) => {
-    // Simulated messages for demonstration
-    return [
-      { id: 0, text: 'Hello! How can I assist you today?', sender: 'bot' },
-      { id: 1, text: 'Hi, I need help with my account.', sender: 'user' }
-    ];
-    // Replace with actual backend API call to fetch messages
-  };
+//  useEffect(() => {
+//    if (selectedChat !== null) {
+//      // Fetch messages for the selected chat from the backend using getChatById
+//      getChatById(selectedChat)
+//        .then((chatDetails) => {
+//          if (chatDetails && chatDetails.messages) {
+//            setMessages(chatDetails.messages);  // Assume messages are part of the chatDetails response
+//          } else {
+//            setMessages([]);  // Reset or handle as needed if no messages are found
+//          }
+//        })
+//        .catch((error) => {
+//          console.error('Error fetching messages:', error);
+//        });
+//    } else {
+//      setMessages([]);  // Reset messages when there is no selected chat
+//    }
+//  }, [selectedChat]);
 
   const handleSendMessage = () => {
     if (newMessage.trim() !== '') {
       const message = {
-        id: messages.length,
+        id: messages.length,  // This might not be the best way to assign IDs in a real app
         text: newMessage,
         sender: 'user'
       };
@@ -55,8 +51,8 @@ function MainContent({ selectedChat }) {
         {messages.map((message) => (
           <ListItem key={message.id}>
             <ListItemText
-              primary={<Typography color={message.sender === 'bot' ? 'primary' : 'secondary'}>{message.text}</Typography>}
-              sx={{ textAlign: message.sender === 'bot' ? 'left' : 'right' }}
+              primary={<Typography color={message.role === 'bot' ? 'primary' : 'secondary'}>{message.text}</Typography>}
+              sx={{ textAlign: message.role === 'bot' ? 'left' : 'right' }}
             />
           </ListItem>
         ))}

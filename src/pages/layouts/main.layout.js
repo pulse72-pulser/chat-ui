@@ -9,7 +9,7 @@ import MainContent from '../../components/MainContent';
 import NavBar from '../../components/Navbar';
 
 
-const MainLayout = ({ children ,chats}) => {
+const MainLayout = ({ children ,chats, selectedChat, messages, onChatSelect, onCreate}) => {
     // const [authenticateState, setAuthenticateState] = useState(null);
     // const { state, signOut, getBasicUserInfo, getIDToken, getDecodedIDToken } = useAuthContext();
     const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -66,8 +66,11 @@ const MainLayout = ({ children ,chats}) => {
       <NavBar handleDrawerToggle={handleDrawerToggle} />
       <SideBar 
         chats = {chats|| []}
+        onChatSelect = {onChatSelect}
+        selectedChat = {selectedChat}
+        onCreate = {onCreate}
       mobileOpen={mobileOpen} handleDrawerClose={() => setMobileOpen(false)} />
-      <MainContent />
+      <MainContent messages= {messages} />
     </Box>
 
             <div>{children}</div>
