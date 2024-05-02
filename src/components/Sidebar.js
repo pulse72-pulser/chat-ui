@@ -3,11 +3,10 @@ import React, { useState } from 'react';
 import { Box, Drawer, Divider } from '@mui/material';
 import CreateChatButton from './NewChatButton';
 import ChatList from './ChatList';
-//import MainContent from './MainContent';
 
 const drawerWidth = 240;
 
-function SideBar({ mobileOpen, handleDrawerClose, container, chats, onChatSelect, selectedChat, onCreate }) {
+function SideBar({ mobileOpen, handleDrawerClose, container, chats=[], onChatSelect, selectedChat, onCreate }) {
 
   const handleSelectChat = (chatId) => {
     // Handle chat selection
@@ -18,9 +17,13 @@ function SideBar({ mobileOpen, handleDrawerClose, container, chats, onChatSelect
     <div>
       <CreateChatButton onCreate={onCreate} />
       <Divider />
-      <ChatList chats={chats} onSelectChat={handleSelectChat} selectedChatId={selectedChat} />
+      {
+        chats.length === 0 ? <p>No chats created.</p> :
+        <ChatList chats={chats} onSelectChat={handleSelectChat} selectedChatId={selectedChat} />}
     </div>
   );
+
+  // console.log("chats chats :",chats )
 
   return (
     <Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }} aria-label="mailbox folders">

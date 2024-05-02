@@ -8,7 +8,7 @@ import { getInfo } from '../services/info.service';
 
 export default function HomePage() {
   // const [authenticateState, setAuthenticateState] = useState(null);
-  const { state, signOut, getBasicUserInfo, getIDToken, getDecodedIDToken } = useAuthContext();
+  const { state } = useAuthContext();
   const navigate = useNavigate();
 
   if(state?.isAuthenticated){

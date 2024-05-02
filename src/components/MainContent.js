@@ -5,38 +5,22 @@ import { getChatById } from '../services/chat.services';  // Adjust the path as 
 
 const drawerWidth = 240;
 
-function MainContent({ messages }) {
+function MainContent({ messages,setMessages,sendChatMessage }) {
 //  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
 
-  // useEffect hook to fetch messages when selectedChat changes
-//  useEffect(() => {
-//    if (selectedChat !== null) {
-//      // Fetch messages for the selected chat from the backend using getChatById
-//      getChatById(selectedChat)
-//        .then((chatDetails) => {
-//          if (chatDetails && chatDetails.messages) {
-//            setMessages(chatDetails.messages);  // Assume messages are part of the chatDetails response
-//          } else {
-//            setMessages([]);  // Reset or handle as needed if no messages are found
-//          }
-//        })
-//        .catch((error) => {
-//          console.error('Error fetching messages:', error);
-//        });
-//    } else {
-//      setMessages([]);  // Reset messages when there is no selected chat
-//    }
-//  }, [selectedChat]);
+
 
   const handleSendMessage = () => {
     if (newMessage.trim() !== '') {
       const message = {
         id: messages.length,  // This might not be the best way to assign IDs in a real app
         text: newMessage,
-        sender: 'user'
+        role: 'user'
       };
-      setMessages([...messages, message]);
+      // setMessages([...messages, message]);
+      
+      sendChatMessage(message);
       setNewMessage('');
     }
   };

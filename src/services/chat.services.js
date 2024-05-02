@@ -3,6 +3,7 @@ import axios from 'axios';
 const BASE_URL = 'https://e87c6b5f-8e8f-4d2d-ae89-0bf06baeab5b-prod.e1-us-east-azure.choreoapis.dev/chatapp/chatservice/chat-service-5c6/v1.2';
 
 const getChats =async(token)=> {
+    // console.log("token:",token)
     if(!token) throw new Error('Token is required');
 
     // const response = await axios.get(`${BASE_URL}/chats`);
@@ -11,6 +12,7 @@ const getChats =async(token)=> {
             Authorization: `Bearer ${token}`
         }
     });
+    // console.log("response:",response)
     return response.data;
 }
 
@@ -36,6 +38,7 @@ const sendMessage = async (token, message) => {
     if (!token) {
         throw new Error('Token is required');
     }
+    console.log("message:",token,message)
 
     try {
         const response = await axios.post(`${BASE_URL}/messages`, message, {
@@ -43,6 +46,7 @@ const sendMessage = async (token, message) => {
                 Authorization: `Bearer ${token}`
             }
         });
+        console.log("response:",response)
         return response.data;
     } catch (error) {
         console.error('Error sending message:', error);

@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { List, ListItem, ListItemButton, ListItemText, Badge } from '@mui/material';
 
-function ChatList({ chatData, onSelectChat, selectedChatId, unreadChats }) {
+function ChatList({ chats, onSelectChat, selectedChatId, unreadChats }) {
 
+  console.log("selected ",selectedChatId)
   return (
     <List>
-      {chatData.map((chat) => (
+      {chats?.map((chat) => (
         <ListItem key={chat.chat_id} disablePadding>
           <ListItemButton selected={chat.chat_id === selectedChatId} onClick={() => onSelectChat(chat.chat_id)}>
             <ListItemText primary={chat.chat_name} />
