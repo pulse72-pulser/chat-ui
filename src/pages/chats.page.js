@@ -1,69 +1,90 @@
+import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from "@asgardeo/auth-react";
+
 import Chats from "../components/chats";
 import MainLayout from "./layouts/main.layout";
-import {useNavigate} from 'react-router-dom';
-import { useAuthContext } from "@asgardeo/auth-react";
-import { useEffect ,useState} from "react";
-
-import { getChats } from '../services/chat.services';
+import { getChats, getChatById } from '../services/chat.services'; // Ensure getChatById is imported
 
 export default function ChatsPage() {
-  const { state, signOut, getBasicUserInfo, getIDToken,getAccessToken, getDecodedIDToken } = useAuthContext();
+  const { state, getAccessToken } = useAuthContext();
   const navigate = useNavigate();
 
-  if(!state?.isAuthenticated){
-    navigate("/");
-  }
-
   const [chats, setChats] = useState([]);
+  const [selectedChat, setSelectedChat] = useState(null);
+  const [messages, setMessages] = useState([]); // State to hold messages for the selected chat
 
-    //   if (state?.isAuthenticated) {
-  //     const getData = async () => {
-  //       const basicUserInfo = await getBasicUserInfo();
-  //       const idToken = await getIDToken();
-  //       const decodedIDToken = await getDecodedIDToken();
+  const handleChatCreated = (chat) => {
+    // Optionally refresh the chat list or take other actions
+    console.log('Chat created successfully!');
+    if (!state?.isAuthenticated) {
+      navigate("/");
+    } else {
+        const token = await getAccessToken();
+        const chatsData = await getChats(token);
+        setChats(chatsData?.chats);
+        setSelectedChat(chat.chat_id);
+    }
+  };
 
-  //       const authState = {
-  //         authenticateResponse: basicUserInfo,
-  //         idToken: idToken.split("."),
-  //         decodedIdTokenHeader: JSON.parse(atob(idToken.split(".")[0])),
-  //         decodedIDTokenPayload: decodedIDToken
-  //       };
-
-  //       // setAuthenticateState(authState);
-  //     };
+  const handleCreateChat = async (newChat) => {
+    if (!state?.isAuthenticated) {
+      navigate("/");
+    } else {
+        const token = await getAccessToken();
+        const chatsData = await createChat(token, newChat);
+    }
+  };
 
   useEffect(() => {
-    const getData = async () => {
-      if(state?.isAuthenticated) {
-        
-        try{
-          // const token = await getIDToken();
+    if (!state?.isAuthenticated) {
+      navigate("/");
+    } else {
+      const getData = async () => {
+        try {
           const token = await getAccessToken();
-          // console.log("access token", token)
-          const chats = await getChats(token);
-          console.log(chats);
-          setChats(chats?.chats);
-        }catch(e){
+          const chatsData = await getChats(token);
+          setChats(chatsData?.chats);
+          if (chatsData?.chats.length > 0) {
+            setSelectedChat(chatsData.chats[0].id); // Automatically select the first chat initially
+          }
+        } catch (e) {
           console.error(e);
         }
-       
+      };
+      getData();
+    }
+  }, [state?.isAuthenticated, navigate]);
 
-  //       const idToken = await getIDToken();
-  //       const decodedIDToken = await getDecodedIDToken();
+  useEffect(() => {
+    const fetchMessages = async () => {
+      if (selectedChat) {
+        try {
+          const token = await getAccessToken();
+          const chatDetails = await getChatById(selectedChat, token); // Ensure this function signature matches the API call
+          setMessages(chatDetails?.messages || []);
+        } catch (error) {
+          console.error('Error fetching messages for chat:', error);
+          setMessages([]); // Handle error by clearing messages or setting an error state
+        }
       }
-
     };
-    getData();
-  }, []);
 
-    return (
-      <>
-        <MainLayout
-          chats={chats}
-        >
-        <Chats 
+    fetchMessages();
+  }, [selectedChat]);
+
+  return (
+    <>
+      <MainLayout
+        chats={chats}
+        selectedChat={selectedChat}
+        messages={messages}
+        onChatSelect={setSelectedChat}
+        onCreate = {handleCreateChat}
+      >
+        <Chats
         />
-        </MainLayout>
-      </>
-    );
-  } 
+      </MainLayout>
+    </>
+  );
+}

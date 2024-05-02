@@ -3,23 +3,22 @@ import React, { useState } from 'react';
 import { Box, Drawer, Divider } from '@mui/material';
 import CreateChatButton from './NewChatButton';
 import ChatList from './ChatList';
-import MainContent from './MainContent';
+//import MainContent from './MainContent';
 
 const drawerWidth = 240;
 
-function SideBar({ mobileOpen, handleDrawerClose, container, chats, onCreateChat }) {
-  const [selectedChat, setSelectedChat] = useState(null);
+function SideBar({ mobileOpen, handleDrawerClose, container, chats, onChatSelect, selectedChat, onCreate }) {
 
   const handleSelectChat = (chatId) => {
     // Handle chat selection
-    setSelectedChat(chatId);
+    onChatSelect(chatId);
   };
 
   const drawerContent = (
     <div>
-      <CreateChatButton onCreate={onCreateChat} />
+      <CreateChatButton onCreate={onCreate} />
       <Divider />
-      <ChatList chats={chats} onSelectChat={handleSelectChat} />
+      <ChatList chats={chats} onSelectChat={handleSelectChat} selectedChatId={selectedChat} />
     </div>
   );
 
@@ -50,7 +49,6 @@ function SideBar({ mobileOpen, handleDrawerClose, container, chats, onCreateChat
       >
         {drawerContent}
       </Drawer>
-      <MainContent selectedChat={selectedChat} />
     </Box>
   );
 }

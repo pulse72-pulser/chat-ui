@@ -2,38 +2,23 @@ import React, { useState } from 'react';
 import { Button, Toolbar, Modal, Box, TextField, Stack } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
-function CreateChatButton({ onCreate, onChatCreated }) {
+function CreateChatButton({ onCreate }) {
   const [open, setOpen] = useState(false);
   const [chatName, setChatName] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
+  const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
+    setChatName('');
   };
 
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      // Send the chat name data to the backend
-      const response = await fetch('your-backend-url/create-chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name: chatName }),
-      });
-      if (response.ok) {
-        // If the request is successful, update the chat list component
-        onChatCreated();
-        setChatName('');
-        handleClose();
-      } else {
-        console.error('Failed to create chat:', response.statusText);
-      }
+      const newChat = {'chat_name': chatName}
+      await onCreate(newChat);  // Delegate the creation logic to the parent component         // Call the onChatCreated to potentially refresh chat list or similar action
+      handleClose();             // Close the modal on success
     } catch (error) {
       console.error('Error creating chat:', error);
     } finally {
@@ -78,6 +63,7 @@ function CreateChatButton({ onCreate, onChatCreated }) {
               variant="outlined"
               value={chatName}
               onChange={(e) => setChatName(e.target.value)}
+              autoFocus
             />
             <Button
               variant="contained"
